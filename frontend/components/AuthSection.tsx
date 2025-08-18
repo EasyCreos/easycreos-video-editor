@@ -1,8 +1,14 @@
-export function AuthSection() {
+interface AuthSectionProps {
+  text: string
+  linkText: string
+  linkUrl: string
+}
+
+export function AuthSection({ text, linkText, linkUrl }: AuthSectionProps) {
   return (
     <>
-      <p className="mt-8 text-lg">Already have an account?</p>
-      <a href="/login" className="mt-4 block text-blue-600 hover:underline font-semibold text-lg">Log In</a>
+      <p className="mt-8 text-lg">{text}</p>
+      <a href={linkUrl} className="mt-4 block text-blue-600 hover:underline font-semibold text-lg">{linkText}</a>
       <div className="mt-8 flex items-center">
         <hr className="flex-1 border-gray-300" />
         <p className="mx-2 text-base">OR</p>
