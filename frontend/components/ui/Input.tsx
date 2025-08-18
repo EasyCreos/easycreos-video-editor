@@ -8,7 +8,7 @@ export function Input({ type = 'text', placeholder }: InputProps) {
     <input
       type={type}
       placeholder={placeholder}
-      className="w-full px-5 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+      className="w-full px-5 py-3 border border-gray-300 rounded-full focus:border-gray-400 outline-none appearance-none"
       style={{ background: 'none' }}
     />
   )
