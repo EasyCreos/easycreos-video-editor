@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Features } from '@/components/Features'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import { VideoSection } from '@/components/VideoSection'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
