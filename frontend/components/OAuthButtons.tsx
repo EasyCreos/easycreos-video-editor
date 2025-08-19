@@ -1,6 +1,11 @@
 import { Button } from '@/components/ui/Button'
 
-export function OAuthButtons() {
+interface OAuthButtonsProps {
+  googleText: string
+  xText: string
+}
+
+export function OAuthButtons({ googleText, xText }: OAuthButtonsProps) {
   return (
     <>
       <Button
@@ -8,15 +13,14 @@ export function OAuthButtons() {
         className="w-full mt-8 flex items-center px-6 font-medium text-base py-2.5"
       >
         <img src="/icons/google-icon.svg" alt="Google" className="w-6 h-6 mr-2" />
-        Sign Up with Google
+        {googleText} with Google
       </Button>
-
       <Button
         variant="outline"
         className="w-full mt-2 flex font-medium items-center px-6 text-base py-2.5"
       >
-        <img src="/icons/x-icon.svg" alt="Twitter" className="w-6 h-6 mr-2" />
-        Sign Up with Twitter
+        <img src="/icons/x-icon.svg" alt="X" className="w-6 h-6 mr-2" />
+        {xText} with X
       </Button>
     </>
   )
