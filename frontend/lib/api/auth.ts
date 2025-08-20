@@ -1,7 +1,8 @@
-export async function registerUser(email: string, password: string) {
-    return fetch("http://localhost:5000/users", {
+import { apiFetch } from "@/lib/api";
+
+export async function registerUser(name: string, email: string, password: string) {
+    return apiFetch("/users", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
-    }).then(r => r.json())
+    });
 }

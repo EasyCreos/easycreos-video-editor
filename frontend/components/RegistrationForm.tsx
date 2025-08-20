@@ -28,7 +28,7 @@ export function RegistrationForm() {
     setMessage(null)
 
     try {
-      await AuthAPI.registerUser(data.email, data.password)
+      await AuthAPI.registerUser(data.name,data.email, data.password)
       setMessage("✅ User registered successfully")
     } catch (err: any) {
       setMessage(`❌ ${err.message}`)
