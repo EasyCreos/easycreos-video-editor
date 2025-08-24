@@ -4,7 +4,7 @@ let csrfToken: string | null = null;
 
 async function fetchCsrfToken() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/csrf`, {
-        credentials: "include", 
+        credentials: "include",
     });
     const data = await res.json();
     csrfToken = data.csrfToken;
@@ -29,6 +29,11 @@ export async function apiFetch(
         ...options,
     });
 
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || `Request failed with status ${res.status}`);
+    }
+  
     if (res.status === 403) {
         await fetchCsrfToken();
         return apiFetch(url, options);
