@@ -3,10 +3,11 @@ import { UsersModule } from './users/users.module';
 import { CsrfController } from './csrf/csrf.controller';
 import { CsrfTokenMiddleware } from './middleware/csrf.middleware';
 import { ConfigModule } from './config/config.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
-  imports: [UsersModule, ConfigModule],
+  imports: [UsersModule, ConfigModule, AuthModule],
   controllers: [CsrfController],
 })
 
