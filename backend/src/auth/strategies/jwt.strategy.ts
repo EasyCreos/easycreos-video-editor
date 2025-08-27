@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
+import { Request } from 'express';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,17 +13,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     ) {
         const jwtSecret = configService.get<string>('JWT_SECRET');
         if (!jwtSecret) {
-            throw new Error('JWT_SECRET is not defined in configuration');
+            throw new Error('JWT_SECRET is not defined in environment variables');
         }
         super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: ExtractJwt.fromExtractors([
+                (request: Request) => {
+                    let token = request?.cookies?.accessToken;
+
+                    if (!token) {
+                        token = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
+                    }
+
+                    return token;
+                },
+            ]),
             ignoreExpiration: false,
             secretOrKey: jwtSecret,
         });
     }
 
     async validate(payload: any) {
-        const user = await this.authService.validateUser(payload.sub);
-        return user;
+        return await this.authService.validateUser(payload.sub);
     }
 }

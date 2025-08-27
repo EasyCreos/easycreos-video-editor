@@ -2,11 +2,7 @@ import { Injectable, BadRequestException, InternalServerErrorException, Logger }
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Prisma } from '@prisma/client';
-import { Logger } from '@nestjs/common';
-
 
 @Injectable()
 export class UsersService {

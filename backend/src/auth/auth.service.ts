@@ -1,13 +1,9 @@
-import {
-    Injectable,
-    UnauthorizedException,
-    ConflictException,
-    BadRequestException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { Response } from 'express';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 
@@ -19,7 +15,7 @@ export class AuthService {
         private configService: ConfigService,
     ) { }
 
-    async register(registerDto: RegisterDto) {
+    async register(registerDto: RegisterDto, response: Response) {
         const { email, password, name = '' } = registerDto;
 
         const existingUser = await this.prisma.user.findUnique({
@@ -27,10 +23,14 @@ export class AuthService {
         });
 
         if (existingUser) {
-            throw new ConflictException('User with this email already exists');
+            throw new ConflictException('Email already in use');
         }
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+        if (typeof password !== 'string' || !password) {
+            throw new BadRequestException('Password must be a string');
+        }
+
+        const hashedPassword = await bcrypt.hash(String(password), 12);
 
         const user = await this.prisma.user.create({
             data: {
@@ -41,8 +41,9 @@ export class AuthService {
         });
 
         const tokens = await this.generateTokens(user.id, user.email);
-
         await this.storeRefreshToken(user.id, tokens.refreshToken);
+
+        this.setTokenCookies(response, tokens);
 
         return {
             user: {
@@ -50,11 +51,10 @@ export class AuthService {
                 email: user.email,
                 name: user.name,
             },
-            ...tokens,
         };
     }
 
-    async login(loginDto: LoginDto) {
+    async login(loginDto: LoginDto, response: Response) {
         const { email, password } = loginDto;
 
         const user = await this.prisma.user.findUnique({
@@ -65,7 +65,11 @@ export class AuthService {
             throw new UnauthorizedException('Invalid login credentials');
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (typeof password !== 'string' || !password) {
+            throw new BadRequestException('Password must be a string');
+        }
+
+        const isPasswordValid = await bcrypt.compare(String(password), user.password);
 
         if (!isPasswordValid) {
             throw new UnauthorizedException('Invalid login credentials');
@@ -76,8 +80,9 @@ export class AuthService {
         }
 
         const tokens = await this.generateTokens(user.id, user.email);
-
         await this.storeRefreshToken(user.id, tokens.refreshToken);
+
+        this.setTokenCookies(response, tokens);
 
         return {
             user: {
@@ -85,54 +90,55 @@ export class AuthService {
                 email: user.email,
                 name: user.name,
             },
-            ...tokens,
         };
     }
 
-    async refreshTokens(refreshToken: string) {
-        try {
-            const payload = this.jwtService.verify(refreshToken, {
-                secret: this.configService.get('JWT_REFRESH_SECRET'),
-            });
-
-            const storedToken = await this.prisma.refreshToken.findUnique({
-                where: { token: refreshToken },
-                include: { user: true },
-            });
-
-            if (!storedToken || storedToken.expiresAt < new Date()) {
-                throw new UnauthorizedException('Invalid refresh token');
+    async logout(response: Response, refreshToken?: string) {
+        if (refreshToken) {
+            try {
+                await this.prisma.refreshToken.delete({
+                    where: { token: refreshToken },
+                });
+            } catch (error) {
             }
-
-            await this.prisma.refreshToken.delete({
-                where: { token: refreshToken },
-            });
-
-            const tokens = await this.generateTokens(
-                storedToken.user.id,
-                storedToken.user.email,
-            );
-
-            await this.storeRefreshToken(storedToken.user.id, tokens.refreshToken);
-
-            return tokens;
-        } catch (error) {
-            throw new UnauthorizedException('Invalid refresh token');
         }
+
+        this.clearTokenCookies(response);
     }
 
-    async logout(refreshToken: string) {
-        try {
-            await this.prisma.refreshToken.delete({
-                where: { token: refreshToken },
-            });
-        } catch (error) {
-        }
+    private setTokenCookies(response: Response, tokens: { accessToken: string; refreshToken: string }) {
+        const isProduction = this.configService.get('NODE_ENV') === 'production';
+
+        response.cookie('accessToken', tokens.accessToken, {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: 'lax',
+            maxAge: 15 * 60 * 1000, 
+            path: '/',
+        });
+
+        response.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
+            path: '/',
+        });
     }
 
-    async logoutAll(userId: string) {
-        await this.prisma.refreshToken.deleteMany({
-            where: { userId },
+    private clearTokenCookies(response: Response) {
+        response.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: this.configService.get('NODE_ENV') === 'production',
+            sameSite: 'lax',
+            path: '/',
+        });
+
+        response.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: this.configService.get('NODE_ENV') === 'production',
+            sameSite: 'lax',
+            path: '/',
         });
     }
 
@@ -150,10 +156,7 @@ export class AuthService {
             }),
         ]);
 
-        return {
-            accessToken,
-            refreshToken,
-        };
+        return { accessToken, refreshToken };
     }
 
     private async storeRefreshToken(userId: string, refreshToken: string) {

@@ -56,7 +56,7 @@ export function RegistrationForm() {
             : 'Network error. Check your connection and try again'
       }
 
-      setMessage(`❌ ${errorMessage}`)
+      setMessage(`${errorMessage}`)
     } finally {
       setLoading(false)
     }
