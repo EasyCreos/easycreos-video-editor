@@ -20,7 +20,7 @@ async function bootstrap() {
     csurf({
       cookie: {
         key: '_csrf',
-        httpOnly: false,
+        httpOnly: true,
         secure: configService.get('NODE_ENV') === 'production',
         sameSite: 'lax',
       },

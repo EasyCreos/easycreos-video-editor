@@ -14,6 +14,7 @@ model User {
   name                   String
   avatarUrl              String?
   role                   Role               @default(USER)
+  isActive               Boolean            @default(true)
 
   subscriptionPlanId     String?
   subscriptionPlan       SubscriptionPlan?  @relation(fields: [subscriptionPlanId], references: [id])
@@ -23,8 +24,20 @@ model User {
   mediaFiles             MediaFile[]
   renderTasks            RenderTask[]       @relation("UserRenderTasks")
 
+  refreshTokens          RefreshToken[]
+
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SubscriptionPlan {
