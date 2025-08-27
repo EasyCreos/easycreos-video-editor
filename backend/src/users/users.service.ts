@@ -1,33 +1,58 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Prisma } from '@prisma/client';
+import { Logger } from '@nestjs/common';
+
 
 @Injectable()
-@UseGuards(JwtAuthGuard)
 export class UsersService {
-    constructor(private prisma: PrismaService) { }
+  private readonly logger = new Logger(UsersService.name);
 
-    async findAll(): Promise<User[]> {
-        return this.prisma.user.findMany();
-    }
+  constructor(private prisma: PrismaService) { }
 
-    async findOne(id: string): Promise<User | null> {
-        return this.prisma.user.findUnique({ where: { id } });
-    }
+  async findAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
+  }
 
-    async update(id: string, data: UpdateUserDto): Promise<User> {
-        const updatedData: any = { ...data };
-        if (data.password) {
-            updatedData.password = await bcrypt.hash(data.password, 10);
-        }
-        return this.prisma.user.update({ where: { id }, data: updatedData });
+  async findOne(id: string): Promise<User | null> {
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      throw new BadRequestException('Invalid ID format');
     }
+    return this.prisma.user.findUnique({ where: { id } });
+  }
 
-    async remove(id: string): Promise<User> {
-        return this.prisma.user.delete({ where: { id } });
+  async update(id: string, data: UpdateUserDto): Promise<User> {
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      throw new BadRequestException('Invalid ID format');
     }
+    const updatedData: any = { ...data };
+    if (data.password) {
+      updatedData.password = await bcrypt.hash(data.password, 10);
+    }
+    try {
+      return this.prisma.user.update({ where: { id }, data: updatedData });
+    } catch (error) {
+      this.logger.error(`Update error for id ${id}: ${error.message}`, error.stack);
+      throw new InternalServerErrorException('Internal server error');
+    }
+  }
+
+  async remove(id: string): Promise<User> {
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      throw new BadRequestException('Invalid ID format');
+    }
+    try {
+      return this.prisma.user.delete({ where: { id } });
+    } catch (error) {
+      this.logger.error(`Delete error for id ${id}: ${error.message}`, error.stack);
+      throw new InternalServerErrorException('Internal server error');
+    }
+  }
 }
