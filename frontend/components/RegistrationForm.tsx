@@ -42,7 +42,6 @@ export function RegistrationForm() {
       setTimeout(() => router.push('/login'), 1000)
     } catch (err: any) {
       let errorMessage = err.message || 'An unexpected error occurred. Please try again'
-
       if (errorMessage.includes('Email already in use')) {
         errorMessage = 'This email is already registered'
       } else if (errorMessage.includes('Invalid email format')) {
@@ -55,8 +54,7 @@ export function RegistrationForm() {
             ? 'Server error. Please try again later'
             : 'Network error. Check your connection and try again'
       }
-
-      setMessage(`${errorMessage}`)
+      setMessage(`❌ ${errorMessage}`)
     } finally {
       setLoading(false)
     }
