@@ -5,6 +5,7 @@ import { VideoSection } from '@/components/VideoSection'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { PinkBubbles } from '@/components/PinkBubbles'
+import Link from 'next/link';
 
 export default function HomePage() {
   return (
@@ -22,7 +23,9 @@ export default function HomePage() {
             The world’s <strong>first web application</strong> that allows you to instantly create <strong>visual solutions using a simple and intuitive constructor</strong>
           </p>
           <div className="mt-8">
-            <Button className="text-sm">Try the workspace</Button>
+            <Link href="/register">
+              <Button className="text-sm">Try the workspace</Button>
+            </Link>
           </div>
         </section>
 

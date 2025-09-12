@@ -27,7 +27,9 @@ export class AuthController {
     @Body() registerDto: RegisterDto,
     @Res({ passthrough: true }) response: Response
   ) {
-    return this.authService.register(registerDto, response);
+    const result = await this.authService.register(registerDto, response);
+    response.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    return result;
   }
 
   @Post('login')
@@ -71,7 +73,7 @@ export class AuthController {
   ) {
     const user = await this.authService.googleLogin(req.user as any);
     await this.authService.handleOAuthLogin(user, response);
-    response.redirect(`${process.env.FRONTEND_URL}/login?user=${encodeURIComponent(JSON.stringify(user))}`);
+    response.redirect(`${process.env.FRONTEND_URL}/dashboard?user=${encodeURIComponent(JSON.stringify(user))}`);
   }
 
   @Get('twitter')
@@ -86,6 +88,6 @@ export class AuthController {
   ) {
     const user = await this.authService.twitterLogin(req.user as any);
     await this.authService.handleOAuthLogin(user, response);
-    response.redirect(`${process.env.FRONTEND_URL}/login?user=${encodeURIComponent(JSON.stringify(user))}`);
+    response.redirect(`${process.env.FRONTEND_URL}/dashboard?user=${encodeURIComponent(JSON.stringify(user))}`);
   }
 }
