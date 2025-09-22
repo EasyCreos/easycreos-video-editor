@@ -1,0 +1,112 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                     String             @id @default(uuid())
+  email                  String             @unique
+  password               String             
+  name                   String
+  avatarUrl              String?
+  role                   Role               @default(USER)
+  isActive               Boolean            @default(true)
+
+  subscriptionPlanId     String?
+  subscriptionPlan       SubscriptionPlan?  @relation(fields: [subscriptionPlanId], references: [id])
+  subscriptionValidUntil DateTime?
+
+  projects               Project[]
+  mediaFiles             MediaFile[]
+  renderTasks            RenderTask[]       @relation("UserRenderTasks")
+
+  refreshTokens          RefreshToken[]
+
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SubscriptionPlan {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  priceMonthly  Int
+  features      Json     // {"maxProjects": 10, "watermark": false, "aiSubtitles": true}
+  users         User[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Project {
+  id         String       @id @default(uuid())
+  name       String
+  user       User         @relation(fields: [userId], references: [id])
+  userId     String
+  mediaFiles ProjectMedia[]
+  renderTasks RenderTask[] @relation("ProjectRenderTasks")
+
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model MediaFile {
+  id        String       @id @default(uuid())
+  url       String
+  type      MediaType
+  user      User         @relation(fields: [userId], references: [id])
+  userId    String
+  projects  ProjectMedia[]
+  createdAt DateTime     @default(now())
+}
+
+model ProjectMedia {
+  id          String     @id @default(uuid())
+  project     Project    @relation(fields: [projectId], references: [id])
+  projectId   String
+  mediaFile   MediaFile  @relation(fields: [mediaFileId], references: [id])
+  mediaFileId String
+}
+
+model RenderTask {
+  id        String   @id @default(uuid())
+  project   Project  @relation("ProjectRenderTasks", fields: [projectId], references: [id])
+  projectId String
+  user      User     @relation("UserRenderTasks", fields: [userId], references: [id])
+  userId    String
+
+  status    RenderStatus @default(PENDING)
+  outputUrl String?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MediaType {
+  VIDEO
+  IMAGE
+  AUDIO
+}
+
+enum RenderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}

@@ -1,10 +1,18 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { UsersModule } from './users/users.module';
+import { CsrfController } from './csrf/csrf.controller';
+import { CsrfTokenMiddleware } from './middleware/csrf.middleware';
+import { ConfigModule } from './config/config.module';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [UsersModule, ConfigModule, AuthModule],
+  controllers: [CsrfController],
 })
-export class AppModule {}
+
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CsrfTokenMiddleware).forRoutes('*');
+  }
+}
