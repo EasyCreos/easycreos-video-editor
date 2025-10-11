@@ -41,12 +41,18 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Ліва панель */}
       <div className="px-4 py-8 flex flex-col justify-between border-r border-gray-200" style={{ width: '13.75%' }}>
-        {/* Верхня секція (логотип + кнопка New folder) */}
         <div>
           <div className="mb-6 flex items-center justify-center">
             <Image src="/icons/logo.svg" alt="EasyCreos Logo" width={125} height={35} />
+          </div>
+          <div className="mb-4">
+            <button
+              className="w-full bg-primary text-gray-100 rounded-full px-13 py-3 text-base font-semibold hover:bg-blue-500 transition cursor-pointer"
+              onClick={() => { }}
+            >
+              Create project
+            </button>
           </div>
           <div className="mb-4">
             <button
@@ -62,8 +68,7 @@ export default function Dashboard() {
             {folders.map((folder, index) => (
               <button
                 key={index}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-3 text-base font-medium text-brand-black rounded-full transition ${selectedFolder === folder ? 'bg-blue-50' : 'hover:bg-blue-50'
-                  }`}
+                className={`w-full flex items-center justify-between gap-2 px-3 py-3 text-base font-medium text-brand-black rounded-lg transition ${selectedFolder === folder ? 'bg-blue-50' : 'hover:bg-blue-50'}`}
                 onClick={() => handleFolderSelect(folder)}
               >
                 <div className="flex items-center gap-2">
@@ -77,18 +82,11 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-
-        {/* Кнопка профілю (знизу) */}
         <div className="relative">
           <button
+            ref={buttonRef}
             className="w-full flex items-center justify-between gap-2 bg-transparent border border-gray-200 rounded-full px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
-            onClick={() => {
-              if (!isMenuOpen) {
-                setIsMenuOpen(true);
-              } else {
-                setIsMenuOpen(false);
-              }
-            }}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <div className="flex items-center gap-2">
               <Image src="/icons/def-user.png" alt="User Avatar" width={40} height={40} className="rounded-full" />
@@ -99,8 +97,6 @@ export default function Dashboard() {
             </div>
             <Image src="/icons/more-vertical.svg" alt="Menu" width={24} height={24} />
           </button>
-
-          {/* Випадаюче меню */}
           {isMenuOpen && (
             <div ref={menuRef} className="absolute bottom-full mb-2 w-full bg-brand-white border-0 rounded-xl shadow-sm">
               <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-t-xl hover:bg-gray-100 transition">
@@ -124,9 +120,86 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Права панель (поки порожня) */}
-      <div className="flex-1 p-6">
-        {/* Тут буде основний контент */}
+      <div className="flex-1 pt-23">
+        <div className="mb-12 flex items-center">
+          <h2 className="pl-6 text-2xl font-medium text-black">Folder</h2>
+          <div className="flex-1 flex justify-center items-center mx-auto">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-125 px-5 py-3 border border-gray-200 rounded-full font-normal text-brand-black focus:outline-none focus:border-gray-400 pl-13"
+              />
+              <Image
+                src="/icons/search.svg"
+                alt="Search Icon"
+                width={24}
+                height={24}
+                className="absolute left-5 top-1/2 transform -translate-y-1/2"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end items-center gap-4 pr-10">
+            <button className="flex items-center gap-2 px-3 py-3 border border-gray-200 rounded-full hover:bg-gray-100 transition cursor-pointer">
+              <Image src="/icons/filter.svg" alt="Filter" width={24} height={24} />
+            </button>
+            <button className="px-4 py-3 bg-primary text-gray-100 rounded-full font-semibold hover:bg-blue-500 transition cursor-pointer">
+              Create project
+            </button>
+          </div>
+        </div>
+        <div className="overflow-x-auto pr-4">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="w-68 px-6 py-1.5 text-left text-sm font-medium text-gray-400">Image</th>
+                <th className="w-68 px-3 py-1.5 text-left text-sm font-medium text-gray-400 border-l border-gray-200">Name</th>
+                <th className="w-68 px-3 py-1.5 text-left text-sm font-medium text-gray-400 border-l border-gray-200">Format</th>
+                <th className="w-68 px-3 py-1.5 text-left text-sm font-medium text-gray-400 border-l border-gray-200">Time</th>
+                <th className="w-68 px-3 py-1.5 text-left text-sm font-medium text-gray-400 border-l border-gray-200">Date</th>
+                <th className="w-68 px-3 py-1.5 text-left text-sm font-medium text-gray-400 border-gray-200"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedFolder && [
+                { image: '/icons/placeholder.png', name: 'Video 1', format: '16:9', time: '120s', date: '2025-09-24' },
+                { image: '/icons/placeholder.png', name: 'Video 2', format: '4:3', time: '90s', date: '2025-09-23' },
+                { image: '/icons/placeholder.png', name: 'Video 3', format: '1:1', time: '150s', date: '2025-09-22' },
+              ].map((item, index, array) => (
+                <tr
+                  key={index}
+                  className={`${index === 0 ? 'border-t' : index === array.length - 1 ? 'border-b' : 'border-y'} border-gray-200`}
+                >
+                  <td className="px-6 py-3">
+                    <Image src={item.image} alt="Preview" width={48} height={48} className="rounded" />
+                  </td>
+                  <td className="px-3 py-3 font-medium text-brand-black">{item.name}</td>
+                  <td className="px-3 py-3 font-medium text-brand-black">{item.format}</td>
+                  <td className="px-3 py-3 font-medium text-brand-black">{item.time}</td>
+                  <td className="px-3 py-3 font-medium text-brand-black">{item.date}</td>
+                  <td className="pl-6 py-3 flex gap-2 justify-end">
+                    <button className="flex items-center text-brand-black px-5 py-3 border border-primary rounded-full font-semibold hover:bg-blue-200 transition cursor-pointer">
+                      Open
+                    </button>
+                    <div className="w-12 h-12 flex items-center justify-center">
+                      <Image src="/icons/archive.svg" alt="Archive" width={24} height={24} className="text-yellow-500" />
+                    </div>
+                    <div className="w-12 h-12 flex items-center justify-center">
+                      <Image src="/icons/delete.svg" alt="Delete" width={24} height={24} className="text-red-500" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {!selectedFolder && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
+                    No projects in selected folder
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
