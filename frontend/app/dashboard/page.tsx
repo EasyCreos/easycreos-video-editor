@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Dashboard() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,7 +11,13 @@ export default function Dashboard() {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
+  const { user, loading, isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    console.log("User data:", user);
+  }, [user]);
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -37,6 +45,11 @@ export default function Dashboard() {
     if (selectedFolder !== folder) {
       setSelectedFolder(folder);
     }
+  };
+
+  const handleProfileClick = () => {
+    router.push('/profile');
+    setIsMenuOpen(false);
   };
 
   return (
@@ -88,10 +101,10 @@ export default function Dashboard() {
             className="w-full flex items-center justify-between gap-2 bg-transparent border border-gray-200 rounded-full px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <div className="flex items-center gap-2">
-              <Image src="/icons/def-user.png" alt="User Avatar" width={40} height={40} className="rounded-full" />
+            <div className="flex items-center gap-2 max-w-[calc(100%-50px)]">
+              <Image src={user?.avatarUrl || "/icons/def-user.png"} alt={user?.name || "User"} width={40} height={40} className="rounded-full" />
               <div className="flex flex-col items-start">
-                <span className="text-sm font-semibold text-brand-black">Example</span>
+                <span className="text-sm font-semibold text-brand-black truncate">{user?.name || user?.email}</span>
                 <span className="text-xs font-semibold text-gray-400">Free</span>
               </div>
             </div>
@@ -107,10 +120,10 @@ export default function Dashboard() {
                 <Image src="/icons/credits.svg" alt="Credits Icon" width={24} height={24} />
                 Credits
               </a>
-              <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 hover:bg-gray-100 transition">
+              <div onClick={handleProfileClick} className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer">
                 <Image src="/icons/profile.svg" alt="Profile Icon" width={24} height={24} />
                 Profile
-              </a>
+              </div>
               <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-b-xl hover:bg-gray-100 transition">
                 <Image src="/icons/logout.svg" alt="Logout Icon" width={24} height={24} />
                 Log out
