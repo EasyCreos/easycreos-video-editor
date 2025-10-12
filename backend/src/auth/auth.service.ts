@@ -50,6 +50,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
+        avatarUrl: null,
       },
     };
   }
@@ -89,6 +90,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
+        avatarUrl: user.avatarUrl || null,
       },
     };
   }
@@ -105,9 +107,10 @@ export class AuthService {
     this.clearTokenCookies(response);
   }
 
-  async googleLogin(profile: any): Promise<{ id: string; email: string; name: string }> {
-    const email = profile.emails?.[0]?.value;
-    const displayName = profile.displayName;
+  async googleLogin(profile: any): Promise<{ id: string; email: string; name: string; avatarUrl: string | null }> {
+    const email = profile.email;
+    const displayName = profile.name;
+    const avatarUrl = profile.avatarUrl;
 
     if (!email) {
       throw new BadRequestException('Email not provided by Google');
@@ -121,9 +124,20 @@ export class AuthService {
           email,
           name: displayName,
           password: 'oauth-generated',
+          avatarUrl,
         },
       });
-    } else if (!user.isActive) {
+    } else {
+      user = await this.prisma.user.update({
+        where: { email },
+        data: {
+          name: displayName,
+          avatarUrl,
+        },
+      });
+    }
+
+    if (!user.isActive) {
       throw new UnauthorizedException('Account deactivated');
     }
 
@@ -131,12 +145,14 @@ export class AuthService {
       id: user.id,
       email: user.email,
       name: user.name,
+      avatarUrl: user.avatarUrl,
     };
   }
 
-  async twitterLogin(profile: any): Promise<{ id: string; email: string; name: string }> {
-    const email = profile.emails?.[0]?.value;
+  async twitterLogin(profile: any): Promise<{ id: string; email: string; name: string; avatarUrl: string | null }> {
+    const email = profile.email;
     const { id, username, displayName } = profile;
+    const avatarUrl = profile.avatarUrl;
     const uniqueEmail = email || `twitter_${id}@oauth.com`;
 
     let user = await this.prisma.user.findUnique({ where: { email: uniqueEmail } });
@@ -147,9 +163,20 @@ export class AuthService {
           email: uniqueEmail,
           name: displayName || username,
           password: 'oauth-generated',
+          avatarUrl,
         },
       });
-    } else if (!user.isActive) {
+    } else {
+      user = await this.prisma.user.update({
+        where: { email: uniqueEmail },
+        data: {
+          name: displayName || username,
+          avatarUrl,
+        },
+      });
+    }
+
+    if (!user.isActive) {
       throw new UnauthorizedException('Account deactivated');
     }
 
@@ -157,10 +184,11 @@ export class AuthService {
       id: user.id,
       email: user.email,
       name: user.name,
+      avatarUrl: user.avatarUrl,
     };
   }
 
-  public async handleOAuthLogin(user: { id: string; email: string; name: string }, response: Response): Promise<void> {
+  public async handleOAuthLogin(user: { id: string; email: string; name: string; avatarUrl: string | null }, response: Response): Promise<void> {
     const tokens = await this.generateTokens(user.id, user.email);
     await this.storeRefreshToken(user.id, tokens.refreshToken);
     this.setTokenCookies(response, tokens);
@@ -253,6 +281,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       name: user.name,
+      avatarUrl: user.avatarUrl,
     };
   }
 }
