@@ -17,7 +17,7 @@ export default function Dashboard() {
   useEffect(() => {
     console.log("User data:", user);
   }, [user]);
-  
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -111,7 +111,7 @@ export default function Dashboard() {
             <Image src="/icons/more-vertical.svg" alt="Menu" width={24} height={24} />
           </button>
           {isMenuOpen && (
-            <div ref={menuRef} className="absolute bottom-full mb-2 w-full bg-brand-white border-0 rounded-xl shadow-sm">
+            <div ref={menuRef} className="absolute bottom-full mb-2 w-full bg-brand-white border-0 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
               <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-t-xl hover:bg-gray-100 transition">
                 <Image src="/icons/projects.svg" alt="Projects Icon" width={24} height={24} />
                 Projects

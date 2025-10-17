@@ -13,8 +13,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           'rounded-full px-4 py-2 text-lg transition cursor-pointer disabled:cursor-not-allowed',
           variant === 'default'
-            ? 'bg-primary text-brand-white hover:bg-blue-500 font-semibold'
-            : 'border border-primary hover:bg-blue-200 font-medium',
+            ? 'bg-primary text-brand-white hover:bg-blue-700 font-semibold'
+            : 'border border-primary hover:bg-blue-300 font-medium',
           className
         )}
         {...props}
