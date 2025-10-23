@@ -104,7 +104,7 @@ export function RegistrationForm() {
       />
       {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
 
-      <Button type="submit" className="w-full mt-4 py-3 bg-blue-500 hover:bg-blue-600" disabled={loading}>
+      <Button type="submit" className="w-full mt-4 py-3" disabled={loading}>
         {loading ? "Registering..." : "Continue"}
       </Button>
 

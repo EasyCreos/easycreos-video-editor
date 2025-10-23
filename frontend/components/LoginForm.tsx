@@ -77,13 +77,13 @@ export function LoginForm() {
       />
       {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
-      <a href="/forgot-password" className="block text-blue-700 hover:underline font-semibold text-base text-right">
+      <a href="/forgot-password" className="block text-blue-700 hover:underline font-semibold text-right">
         Forgot your password?
       </a>
 
       <Button
         type="submit"
-        className="w-full mt-4 py-3 bg-blue-500 hover:bg-blue-600 font-normal text-base"
+        className="w-full mt-4 py-3"
         disabled={loading}
       >
         {loading ? "Signing in..." : "Continue"}

@@ -19,12 +19,13 @@ export default function HomePage() {
           <div className="mx-auto w-50 h-50">
             <Image src="/mascot.svg" alt="Mascot" width={250} height={250} />
           </div>
-          <p className="max-w-md mx-auto text-2xl ">
-            The world’s <strong>first web application</strong> that allows you to instantly create <strong>visual solutions using a simple and intuitive constructor</strong>
+          <p className="max-w-lg mx-auto text-2xl ">
+            The world’s <strong>first web application</strong> that allows you to instantly create <strong>visual solutions<br />
+            using a simple and intuitive constructor</strong>
           </p>
           <div className="mt-8">
             <Link href="/register">
-              <Button className="text-sm">Try the workspace</Button>
+              <Button className="text-lg px-5 py-3.5">Try the workspace</Button>
             </Link>
           </div>
         </section>

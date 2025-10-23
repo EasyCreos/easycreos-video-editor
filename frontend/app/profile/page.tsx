@@ -132,7 +132,6 @@ export default function ProfilePage() {
                   <Button
                     variant="outline"
                     onClick={() => {}}
-                    className="border-blue-500 !text-base py-3"
                   >
                     Change photo
                   </Button>
@@ -145,11 +144,10 @@ export default function ProfilePage() {
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   placeholder="Your name"
-                  className="text-base bg-transparent "
+                  className="bg-transparent"
                 />
                 <Button
                   onClick={handleSave}
-                  className="py-3 !text-base"
                 >
                   Save
                 </Button>

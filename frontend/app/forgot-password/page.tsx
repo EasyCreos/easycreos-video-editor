@@ -10,7 +10,7 @@ export default function PasswordRecoveryPage() {
         <Header />
         <section className="flex-1 flex items-center justify-center">
           <div className="max-w-md mx-auto text-center">
-            <h1 className="text-[2rem] font-normal mb-2">Password Recovery</h1>
+            <h1 className="text-[2rem] mb-2">Password Recovery</h1>
             <PasswordRecoveryForm />
             <LegalLinks />
           </div>

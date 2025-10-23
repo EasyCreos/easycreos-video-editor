@@ -10,17 +10,17 @@ export function Header() {
         <Link href="/" className="font-extrabold text-lg">
           EasyCreos
         </Link>
-        <nav className="hidden md:flex space-x-15 text-base font-semibold">
+        <nav className="hidden md:flex space-x-15 font-semibold">
           <a href="#" className="hover:underline">Introduce</a>
           <a href="#" className="hover:underline">About Us</a>
         </nav>
       </div>
       <div className="hidden md:flex items-center space-x-2">
         <Link href="/register">
-          <Button className="text-sm">Sign up</Button>
+          <Button className="px-5">Sign up</Button>
         </Link>
         <Link href="/login">
-          <Button variant="outline" className="text-sm">Log in</Button>
+          <Button variant="outline" className="px-5 font-semibold">Log in</Button>
         </Link>
       </div>
     </header>

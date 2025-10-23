@@ -112,7 +112,7 @@ export default function Dashboard() {
           <div className="mb-4">
             <Button
               onClick={() => setIsPopupOpen(true)}
-              className="w-full px-13 py-3 !text-base"
+              className="w-full px-13"
             >
               Create project
             </Button>
@@ -208,7 +208,6 @@ export default function Dashboard() {
             </button>
             <Button
               onClick={() => setIsPopupOpen(true)}
-              className="py-3 !text-base"
             >
               Create project
             </Button>
@@ -246,7 +245,7 @@ export default function Dashboard() {
                   <td className="pl-6 py-3 flex gap-2 justify-end">
                     <Button
                       variant="outline"
-                      className="px-5 py-3 !text-base !font-semibold"
+                      className="px-5 font-semibold"
                     >
                       Open
                     </Button>
@@ -381,14 +380,14 @@ export default function Dashboard() {
                 <Button
                   variant="outline"
                   onClick={handleClosePopup}
-                  className="px-5 py-3 !text-base font-semibold !border-gray-300 hover:bg-gray-50"
+                  className="px-5 font-semibold !border-gray-300 hover:bg-gray-50"
                 >
                   Cancel
                 </Button>
                <Button
                   onClick={handleCreateProject}
                   disabled={!projectName.trim()}
-                  className={`px-12 py-3 !text-base font-semibold ${!projectName.trim()
+                  className={`px-12 ${!projectName.trim()
                     ? '!bg-blue-300 cursor-not-allowed'
                     : 'bg-primary hover:bg-blue-700'
                     }`}
