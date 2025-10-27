@@ -27,7 +27,7 @@ const ProfileHeader = () => {
           </nav>
         </div>
         <div className="flex items-center space-x-4">
-          <button className="flex items-center gap-2 rounded-full px-3 py-2.5 border-0 text-brand-black font-medium bg-blue-200 hover:bg-blue-300 transition cursor-pointer">
+          <button className="flex items-center gap-2 rounded-full px-3 py-3 border-0 text-brand-black font-medium bg-blue-200 hover:bg-blue-300 transition cursor-pointer">
             Upgrade
             <Image src="/icons/stars.svg" alt="Upgrade" width={24} height={24} />
           </button>

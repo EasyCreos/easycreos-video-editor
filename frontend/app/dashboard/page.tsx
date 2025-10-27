@@ -146,41 +146,53 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-        <div className="relative">
-          <button
-            ref={buttonRef}
-            className="w-full flex items-center justify-between gap-2 bg-transparent border border-gray-200 rounded-full px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <div className="flex items-center gap-2 max-w-[calc(100%-50px)]">
-              <Image src={user?.avatarUrl || "/icons/def-user.png"} alt={user?.name || "User"} width={40} height={40} className="rounded-full" />
-              <div className="flex flex-col items-start">
-                <span className="text-sm font-semibold text-brand-black truncate">{user?.name || user?.email}</span>
-                <span className="text-xs font-semibold text-gray-400">Free</span>
+        <div>
+          <div className="flex gap-2 mb-2">
+            <button className="flex items-center justify-center gap-2 rounded-full px-3 py-3 border-0 font-medium bg-blue-200 hover:bg-blue-300 transition cursor-pointer basis-0 flex-grow-[73]">
+              Upgrade
+              <Image src="/icons/stars.svg" alt="Upgrade" width={24} height={24} />
+            </button>
+            <button className="flex items-center justify-center gap-1 rounded-full px-3 py-3 border border-gray-200 bg-transparent hover:bg-gray-100 transition cursor-pointer basis-0 flex-grow-[24]">
+              <Image src="/icons/logo.svg" alt="Credits" width={20} height={20} />
+              0
+            </button>
+          </div>
+          <div className="relative">
+            <button
+              ref={buttonRef}
+              className="w-full flex items-center justify-between gap-2 bg-transparent border border-gray-200 rounded-full px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <div className="flex items-center gap-2 max-w-[calc(100%-50px)]">
+                <Image src={user?.avatarUrl || "/icons/def-user.png"} alt={user?.name || "User"} width={40} height={40} className="rounded-full" />
+                <div className="flex flex-col items-start">
+                  <span className="text-sm font-semibold text-brand-black truncate">{user?.name || user?.email}</span>
+                  <span className="text-xs font-semibold text-gray-400">Free</span>
+                </div>
               </div>
-            </div>
-            <Image src="/icons/more-vertical.svg" alt="Menu" width={24} height={24} />
-          </button>
-          {isMenuOpen && (
-            <div ref={menuRef} className="absolute bottom-full mb-2 w-full bg-brand-white border-0 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
-              <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-t-xl hover:bg-gray-100 transition">
-                <Image src="/icons/projects.svg" alt="Projects Icon" width={24} height={24} />
-                Projects
-              </a>
-              <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 hover:bg-gray-100 transition">
-                <Image src="/icons/credits.svg" alt="Credits Icon" width={24} height={24} />
-                Credits
-              </a>
-              <div onClick={handleProfileClick} className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer">
-                <Image src="/icons/profile.svg" alt="Profile Icon" width={24} height={24} />
-                Profile
+              <Image src="/icons/more-vertical.svg" alt="Menu" width={24} height={24} />
+            </button>
+            {isMenuOpen && (
+              <div ref={menuRef} className="absolute bottom-full mb-2 w-full bg-brand-white border-0 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+                <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-t-xl hover:bg-gray-100 transition">
+                  <Image src="/icons/projects.svg" alt="Projects Icon" width={24} height={24} />
+                  Projects
+                </a>
+                <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 hover:bg-gray-100 transition">
+                  <Image src="/icons/credits.svg" alt="Credits Icon" width={24} height={24} />
+                  Credits
+                </a>
+                <div onClick={handleProfileClick} className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer">
+                  <Image src="/icons/profile.svg" alt="Profile Icon" width={24} height={24} />
+                  Profile
+                </div>
+                <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-b-xl hover:bg-gray-100 transition">
+                  <Image src="/icons/logout.svg" alt="Logout Icon" width={24} height={24} />
+                  Log out
+                </a>
               </div>
-              <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-b-xl hover:bg-gray-100 transition">
-                <Image src="/icons/logout.svg" alt="Logout Icon" width={24} height={24} />
-                Log out
-              </a>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
