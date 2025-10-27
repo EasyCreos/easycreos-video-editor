@@ -2,13 +2,14 @@
 
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Header() {
   return (
     <header className="absolute top-0 left-0 w-full flex justify-between items-center py-4 z-50 px-[150px]">
       <div className="flex items-center space-x-15">
-        <Link href="/" className="font-extrabold text-lg">
-          EasyCreos
+        <Link href="/">
+          <Image src="/icons/logo.svg" alt="EasyCreos Logo" width={48} height={48} />
         </Link>
         <nav className="hidden md:flex space-x-15 font-semibold">
           <a href="#" className="hover:underline">Introduce</a>

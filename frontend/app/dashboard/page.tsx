@@ -106,8 +106,9 @@ export default function Dashboard() {
     <div className="min-h-screen bg-white flex">
       <div className="px-4 py-8 flex flex-col justify-between border-r border-gray-200" style={{ width: '13.75%' }}>
         <div>
-          <div className="mb-6 flex items-center justify-center">
-            <Image src="/icons/logo.svg" alt="EasyCreos Logo" width={125} height={35} />
+          <div className="mb-6 flex flex-col items-center justify-center">
+            <Image src="/icons/logo.svg" alt="EasyCreos Logo" width={48} height={48} />
+            <p className="text-2xl font-bold text-blue-800">easyCreos</p>
           </div>
           <div className="mb-4">
             <Button

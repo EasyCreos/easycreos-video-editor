@@ -15,7 +15,7 @@ const ProfileHeader = () => {
       <div className="mx-auto flex justify-between items-center py-4" style={{ maxWidth: '1620px'}}>
         <div className="flex items-center space-x-15">
           <Link href="/dashboard">
-            <Image src="/icons/logo.svg" alt="EasyCreos Logo" width={125} height={35} />
+            <Image src="/icons/logo.svg" alt="EasyCreos Logo" width={48} height={48} />
           </Link>
           <nav className="hidden md:flex space-x-15 font-semibold">
             <Link href="/dashboard" className="hover:underline">
@@ -49,7 +49,7 @@ const ProfileHeader = () => {
 const SettingsNavItem = ({ icon, label, isActive, onClick }: { icon: string; label: string; isActive: boolean; onClick: () => void; }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-base transition ${isActive
+    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-base transition cursor-pointer ${isActive
       ? 'font-medium'
       : 'font-medium hover:bg-gray-100'
       }`}
@@ -92,7 +92,7 @@ export default function ProfilePage() {
       <main className="flex mx-auto min-h-[calc(100vh-80px)]" style={{ maxWidth: '1200px' }}>
         <aside className="w-1/4 max-w-xs px-4 py-25 border-r border-gray-200">
           <div className="flex items-center gap-4 mb-8">
-            <button onClick={() => router.back()} className="p-2 border border-gray-300 rounded-full hover:bg-gray-100 transition flex items-center justify-center">
+            <button onClick={() => router.back()} className="p-2 border border-gray-300 rounded-full hover:bg-gray-100 transition flex items-center justify-center cursor-pointer">
               <Image src="/icons/arrow-left.svg" alt="Back" width={24} height={24} />
             </button>
             <h1 className="text-3xl">Options</h1>
