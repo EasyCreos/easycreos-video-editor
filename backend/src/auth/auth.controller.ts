@@ -63,6 +63,13 @@ export class AuthController {
     return { authenticated: true };
   }
 
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Req() req: ExpressRequest, @Res({ passthrough: true }) response: Response) {
+    const refreshToken = req.cookies['refreshToken'];
+    return this.authService.refreshTokens(response, refreshToken);
+  }
+
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   async googleAuth(@Req() req: ExpressRequest) { }

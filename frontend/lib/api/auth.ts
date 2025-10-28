@@ -27,10 +27,10 @@ export async function getCurrentUser() {
 }
 
 export async function updateUser(id: string, data: { name: string; email: string }) {
-  return apiFetch(`/users/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-  });
+    return apiFetch(`/users/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+    });
 }
 
 export async function checkAuth() {

@@ -29,11 +29,29 @@ export async function apiFetch(
         ...options,
     });
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.message || `Request failed with status ${res.status}`);
+    if (res.status === 401 && !(options as any)._retry) {
+        const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
+            },
+        });
+
+        if (refreshRes.ok) {
+            return apiFetch(url, { ...(options as any), _retry: true });
+        }
+
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error((errBody as any).message || `Request failed with status ${res.status}`);
     }
-  
+
+    if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error((errorData as any).message || `Request failed with status ${res.status}`);
+    }
+
     if (res.status === 403) {
         await fetchCsrfToken();
         return apiFetch(url, options);

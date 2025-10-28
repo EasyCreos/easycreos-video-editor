@@ -9,6 +9,7 @@ import { SessionSerializer } from './serializers/session.serializer';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { TwitterStrategy } from './strategies/twitter.strategy';
+import { TokenService } from './services/token.service';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TwitterStrategy } from './strategies/twitter.strategy';
   ],
   providers: [
     AuthService,
+    TokenService,
     JwtStrategy,
     GoogleStrategy,
     TwitterStrategy,
