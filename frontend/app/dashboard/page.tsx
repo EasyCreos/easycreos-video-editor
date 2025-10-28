@@ -104,8 +104,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white flex">
-      <div className="px-4 py-8 flex flex-col justify-between border-r border-gray-200" style={{ width: '13.75%' }}>
-        <div>
+      <div className="h-screen px-4 py-8 flex flex-col justify-between border-r border-gray-200" style={{ width: '13.75%' }}>
+        <div className="flex flex-col flex-1 min-h-0">
           <div className="mb-6 flex flex-col items-center justify-center">
             <Image src="/icons/logo.svg" alt="EasyCreos Logo" width={48} height={48} />
             <p className="text-2xl font-bold text-blue-800">easyCreos</p>
@@ -128,7 +128,7 @@ export default function Dashboard() {
               <Image src="/icons/plus.svg" alt="New Folder" width={24} height={24} />
             </button>
           </div>
-          <div className="space-y-0">
+          <div className="space-y-0 flex-1 overflow-y-auto min-h-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {folders.map((folder, index) => (
               <button
                 key={index}
@@ -146,7 +146,7 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-        <div>
+        <div className="mt-4">
           <div className="flex gap-2 mb-2">
             <button className="flex items-center justify-center gap-2 rounded-full px-3 py-3 border-0 font-medium bg-blue-200 hover:bg-blue-300 transition cursor-pointer basis-0 flex-grow-[73]">
               Upgrade
