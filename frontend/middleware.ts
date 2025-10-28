@@ -13,14 +13,14 @@ export function middleware(request: NextRequest) {
 
     const isAuthRoute = authRoutes.some(route =>
         request.nextUrl.pathname.startsWith(route)
-    )
+    ) 
 
     if (isProtectedRoute && !accessToken) {
         return NextResponse.redirect(new URL('/login', request.url))
     }
 
     if (isAuthRoute && accessToken) {
-        return NextResponse.redirect(new URL('/', request.url))
+        return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
     return NextResponse.next()

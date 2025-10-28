@@ -29,7 +29,7 @@ export function LoginForm() {
         setMessage(`✅ Welcome back, ${response.user.name}!`)
 
         setTimeout(() => {
-          router.push('/')
+          router.push('/dashboard')
         }, 1000)
       }
     } catch (err: any) {

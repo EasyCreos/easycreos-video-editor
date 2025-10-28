@@ -23,7 +23,7 @@ export default function Dashboard() {
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
-  const { user, loading, isAuthenticated } = useAuth();
+  const { user, loading, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     console.log("User data:", user);
@@ -60,6 +60,17 @@ export default function Dashboard() {
   const addFolder = () => {
     const newFolderName = folders.length === 0 ? 'Folder' : `Folder ${folders.length}`;
     setFolders([...folders, newFolderName]);
+  };
+
+  const handleLogoutClick = async (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    setIsMenuOpen(false);
+    try {
+      await logout();
+    } catch (err) {
+      console.error('Logout failed:', err);
+      router.push('/login');
+    }
   };
 
   const handleFolderSelect = (folder: string) => {
@@ -186,7 +197,7 @@ export default function Dashboard() {
                   <Image src="/icons/profile.svg" alt="Profile Icon" width={24} height={24} />
                   Profile
                 </div>
-                <a href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-b-xl hover:bg-gray-100 transition">
+                <a onClick={handleLogoutClick} href="#" className="block px-3 py-3 text-base font-medium text-brand-black flex items-center gap-2 rounded-b-xl hover:bg-gray-100 transition">
                   <Image src="/icons/logout.svg" alt="Logout Icon" width={24} height={24} />
                   Log out
                 </a>
