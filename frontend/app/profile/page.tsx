@@ -33,7 +33,7 @@ const ProfileHeader = () => {
           </button>
           <Link href="/profile">
             <Image
-              src={user?.avatarUrl || '/img/avatar-example.png'}
+              src={user?.avatarUrl || '/icons/def-user.png'}
               alt={user?.name || 'User Avatar'}
               width={48}
               height={48}

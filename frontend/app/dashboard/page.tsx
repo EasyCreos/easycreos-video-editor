@@ -18,7 +18,10 @@ export default function Dashboard() {
   const [height, setHeight] = useState('1920');
   const [isWidthFocused, setIsWidthFocused] = useState(false);
   const [isHeightFocused, setIsHeightFocused] = useState(false);
+  const [editingFolderIndex, setEditingFolderIndex] = useState<number | null>(null);
+  const [editingFolderName, setEditingFolderName] = useState<string>('');
 
+  const inputRef = useRef<HTMLInputElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -28,6 +31,12 @@ export default function Dashboard() {
   useEffect(() => {
     console.log("User data:", user);
   }, [user]);
+
+  useEffect(() => {
+    if (editingFolderIndex !== null && inputRef.current) {
+      inputRef.current.select();
+    }
+  }, [editingFolderIndex]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -45,6 +54,14 @@ export default function Dashboard() {
         !popupRef.current.contains(event.target as Node)
       ) {
         handleClosePopup();
+      }
+
+      if (
+        editingFolderIndex !== null &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        handleFolderRename(editingFolderIndex);
       }
     };
 
@@ -74,6 +91,8 @@ export default function Dashboard() {
   };
 
   const handleFolderSelect = (folder: string) => {
+    if (editingFolderIndex !== null) return;
+
     if (selectedFolder !== folder) {
       setSelectedFolder(folder);
     }
@@ -113,6 +132,35 @@ export default function Dashboard() {
     setter(numericValue.slice(0, 4));
   };
 
+  const handleFolderDoubleClick = (e: React.MouseEvent, index: number, folder: string) => {
+    e.stopPropagation();
+    setEditingFolderIndex(index);
+    setEditingFolderName(folder);
+  };
+
+  const handleFolderRename = (index: number) => {
+    let newName = editingFolderName.trim();
+    const oldName = folders[index];
+
+    if (!newName) {
+      newName = 'Folder';
+    }
+
+    const newFolders = [...folders];
+
+    if (newName !== oldName) {
+      newFolders[index] = newName;
+      setFolders(newFolders);
+
+      if (selectedFolder === oldName) {
+        setSelectedFolder(newName);
+      }
+    }
+
+    setEditingFolderIndex(null);
+    setEditingFolderName('');
+  };
+
   return (
     <div className="min-h-screen bg-white flex">
       <div className="h-screen px-4 py-8 flex flex-col justify-between border-r border-gray-200" style={{ width: '13.75%' }}>
@@ -143,15 +191,39 @@ export default function Dashboard() {
             {folders.map((folder, index) => (
               <button
                 key={index}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-3 text-base font-medium text-brand-black rounded-lg transition ${selectedFolder === folder ? 'bg-blue-50' : 'hover:bg-blue-50'}`}
+                className={`w-full flex items-center justify-between gap-2 px-3 py-3 text-base font-medium text-brand-black rounded-lg transition ${(selectedFolder === folder || editingFolderIndex === index) ? 'bg-blue-50' : 'hover:bg-blue-50'
+                  }`}
                 onClick={() => handleFolderSelect(folder)}
               >
-                <div className="flex items-center gap-2">
-                  <Image src="/icons/folder.svg" alt={`${folder} Icon`} width={24} height={24} />
-                  {folder}
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <Image src="/icons/folder.svg" alt={`${folder} Icon`} width={24} height={24} className="flex-shrink-0" />
+
+                  {editingFolderIndex === index ? (
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={editingFolderName}
+                      onChange={(e) => setEditingFolderName(e.target.value)}
+                      onBlur={() => handleFolderRename(index)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleFolderRename(index);
+                        if (e.key === 'Escape') setEditingFolderIndex(null);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-0 m-0 w-full text-left bg-transparent border-none outline-none text-base font-medium text-brand-black"
+                      autoFocus
+                    />
+                  ) : (
+                    <span
+                      className="truncate"
+                      onDoubleClick={(e) => handleFolderDoubleClick(e, index, folder)}
+                    >
+                      {folder}
+                    </span>
+                  )}
                 </div>
                 {selectedFolder === folder && (
-                  <Image src="/icons/more-vertical.svg" alt="More Options" width={24} height={24} />
+                  <Image src="/icons/more-vertical.svg" alt="More Options" width={24} height={24} className="flex-shrink-0" />
                 )}
               </button>
             ))}
